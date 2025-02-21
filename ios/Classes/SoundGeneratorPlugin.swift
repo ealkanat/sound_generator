@@ -8,7 +8,12 @@ public class SwiftSoundGeneratorPlugin: NSObject, FlutterPlugin {
   // This is not used yet.
   var sampleRate: Int = 48000;
   var isPlaying: Bool = false;
-  var oscillator: AKOscillator = AKOscillator();
+    
+  var oscillator: AKMorphingOscillator = AKMorphingOscillator(waveformArray: [AKTable(.sine),
+                                                                                AKTable(.square),
+                                                                                AKTable(.triangle),
+                                                                                AKTable(.sawtooth),
+                                                                              ]);
   var panner: AKPanner?;
   var mixer: AKMixer?;
 
@@ -32,6 +37,9 @@ public class SwiftSoundGeneratorPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
+        case "getPlatformVersion":
+          result("iOS " + UIDevice.current.systemVersion)
+          break
       case "init":
         //let args = call.arguments as! [String: Any]
         //let sampleRate = args["sampleRate"] as Int
@@ -59,6 +67,12 @@ public class SwiftSoundGeneratorPlugin: NSObject, FlutterPlugin {
         onChangeIsPlaying!.sendEvent(event: false)
         result(nil);
         break;
+      case "dB":
+        result(self.getDecibel());
+        break;
+      case "volume":
+        result(self.getVolume());
+        break;
       case "isPlaying":
         result(self.isPlaying);
         break;
@@ -71,7 +85,28 @@ public class SwiftSoundGeneratorPlugin: NSObject, FlutterPlugin {
         result(nil);
         break;
       case "setWaveform":
-        result(nil);
+        let args = call.arguments as! [String: Any]
+        let waveType = args["waveType"] as! String
+        
+        switch waveType {
+            
+        case "SINUSOIDAL":
+            self.oscillator.index = 0
+            
+        case "SQUAREWAVE":
+            self.oscillator.index = 1
+            
+        case "TRIANGLE":
+            self.oscillator.index = 2
+            
+        case "SAWTOOTH":
+            self.oscillator.index = 3
+            
+        default:
+            self.oscillator.index = 0
+        }
+
+        result(nil)
         break;
       case "setBalance":
         let args = call.arguments as! [String: Any]
@@ -79,7 +114,15 @@ public class SwiftSoundGeneratorPlugin: NSObject, FlutterPlugin {
         break;
       case "setVolume":
         let args = call.arguments as! [String: Any]
-        self.mixer!.volume = args["volume"] as! Double
+        let volume = max(0, min(1, args["volume"] as! Double))
+        self.mixer!.volume = volume
+        result(nil);
+        break;
+      case "setDecibel":
+        let args = call.arguments as! [String: Any]
+        let dB = max(0, min(-20, args["dB"] as! Double))
+        let lineerVolume = pow(10.0, dB / 20.0)
+        self.mixer!.volume = lineerVolume
         result(nil);
         break;
       case "getSampleRate":

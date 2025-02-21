@@ -51,7 +51,9 @@ public class SoundGeneratorPlugin implements FlutterPlugin, MethodCallHandler {
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    if (call.method.equals("init")) {
+    if (call.method.equals("getPlatformVersion")) {
+      result.success("Android " + android.os.Build.VERSION.RELEASE);
+    } else if (call.method.equals("init")) {
       int sampleRate = call.argument("sampleRate");
       result.success(soundGenerator.init(sampleRate));
     }else if (call.method.equals("release")) {
@@ -62,6 +64,10 @@ public class SoundGeneratorPlugin implements FlutterPlugin, MethodCallHandler {
       soundGenerator.stopPlayback();
     }else if (call.method.equals("isPlaying")) {
       result.success(soundGenerator.isPlaying());
+    }else if (call.method.equals("dB")) {
+      result.success(soundGenerator.getDecibel());
+    }else if (call.method.equals("volume")) {
+      result.success(soundGenerator.getVolume());
     }else if (call.method.equals("setAutoUpdateOneCycleSample")) {
       boolean autoUpdateOneCycleSample = call.argument("autoUpdateOneCycleSample");
       soundGenerator.setAutoUpdateOneCycleSample(autoUpdateOneCycleSample);
@@ -76,11 +82,17 @@ public class SoundGeneratorPlugin implements FlutterPlugin, MethodCallHandler {
       soundGenerator.setBalance((float)balance);
     }else if (call.method.equals("setVolume")) {
       double volume = call.argument("volume");
-      soundGenerator.setVolume((float)volume);
+      soundGenerator.setVolume((float)volume, true);
+    }else if (call.method.equals("setDecibel")) {
+      double dB = call.argument("dB");
+      soundGenerator.setDecibel((float)dB);
     }else if (call.method.equals("getSampleRate")) {
       result.success(soundGenerator.getSampleRate());
     }else if (call.method.equals("refreshOneCycleData")) {
       soundGenerator.refreshOneCycleData();
+    }else if (call.method.equals("setCleanStart")) {
+      boolean cleanStart = call.argument("cleanStart");
+      soundGenerator.setCleanStart(cleanStart);
     }else {
       result.notImplemented();
     }

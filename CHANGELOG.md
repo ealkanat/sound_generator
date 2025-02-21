@@ -44,3 +44,22 @@
 ## [0.0.9] - 12/04/2022
 
 * Added panning functionality for ios, added version restriction podspec, fixes (thank you https://github.com/siherrmann)
+
+## [0.0.10] - 24/09/2024
+
+* Added option to start with a clean new frequency on play() (thank you https://github.com/nyxkn)
+* Upgrade sound_generator Package for Compatibility with Flutter SDK 3.5.3 and Latest Android SDK (thank you https://github.com/vashukarn)
+
+## [0.0.11] - 25/09/2024
+
+* Fixed a bug where "Invalid redeclaration of 'SwiftSoundGeneratorPlugin' error" was thrown on iOS  (thank you https://github.com/MaximilianFlechtner)
+
+## [0.0.12] - 16/01/2025
+
+* Updated flutter libraries.
+* Added setDecibel function. (Thanks to https://github.com/LuizAlexandreSilva for the inspiration))
+* Update SoundGeneratorPlugin.swift for iOS sound wave change (thank you https://github.com/sharmaruchi30)
+
+## [0.0.13] - 20/01/2025
+
+* Updated the decibel setting to range from 0 to -120.

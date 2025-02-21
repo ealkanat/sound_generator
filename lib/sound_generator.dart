@@ -78,6 +78,24 @@ class SoundGenerator {
     return sampleRate;
   }
 
+  /// Get PlatformVersion
+  static Future<String> get getPlatformVersion async {
+    final String platformVersion = await _channel.invokeMethod('getPlatformVersion');
+    return platformVersion;
+  }
+
+  /// Get Volume
+  static Future<double> get getVolume async {
+    final double volume = await _channel.invokeMethod('volume');
+    return volume;
+  }
+
+  /// Get Volume
+  static Future<double> get getDecibel async {
+    final double dB = await _channel.invokeMethod('dB');
+    return dB;
+  }
+
   /// Set AutoUpdateOneCycleSample
   static void setAutoUpdateOneCycleSample(bool autoUpdateOneCycleSample) async {
     await _channel.invokeMethod(
@@ -109,5 +127,17 @@ class SoundGenerator {
   static void setVolume(double volume) async {
     await _channel
         .invokeMethod("setVolume", <String, dynamic>{"volume": volume});
+  }
+
+  /// Set Decibel Range from 0 to 20
+  static void setDecibel(double dB) async {
+    await _channel
+        .invokeMethod("setDecibel", <String, dynamic>{"dB": dB});
+  }
+
+  /// Set whether we start with a clean frequency on play
+  static void setCleanStart(bool cleanStart) async {
+    await _channel
+        .invokeMethod("setCleanStart", <String, dynamic>{"cleanStart": cleanStart});
   }
 }
